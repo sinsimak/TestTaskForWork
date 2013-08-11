@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "FindCustomer";
+}
+
+<h3>Найти клиента:</h3>
+
+<div class="row">
+    <div class="col-lg-2">
+        <p>Поиск по:</p>                   
+    </div> 
+    <div class="col-lg-3">
+        <select id="findCustomerSelect">
+            <option value="contractNumber">номер договора</option>  
+            <option value="lastName">фамилия клиента</option>  
+        </select>
+    </div>
+</div>
+
+<div class="row" id="searchByContractNumber">
+    <div class="col-lg-2">
+        <p>Номер договора:</p>    
+    </div>
+    <div class="col-lg-2">
+        <input type="text" id="searchByContractNumberInput" name="searchByContractNumberInput">
+    </div>
+    
+    <div class="col-lg-1">
+        <button id="searchByContractNumberButton" class="btn btn-primary btn-xs">Найти</button>  
+    </div>
+</div>
+
+<div class="row" id="searchByLastName">
+    <div class="col-lg-2">
+        <p>Фамилия клиента:</p>         
+    </div>
+    <div class="col-lg-2">
+        <input type="text" id="searchByLastNameInput" name="searchByLastNameInput"/>
+    </div>
+    <div class="col-lg-1">
+        <button id="searchByLastNameButton" class="btn btn-primary btn-xs">Найти</button>  
+    </div>
+</div>
+<hr/>
+
+<div class="row" id="showResultSearch">
+    <div class="col-lg-6">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Номер договора</th>
+                    <th>ФИО</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="customer"></tbody>
+        </table>
+    </div>
+</div>
+
+
+<script id="customersTemplate" type="text/x-jsrender">
+        {{for CustomerDtoList}}
+            <tr>
+                <td>{{>ContractNumber}}</td>
+                <td>{{>LastName}} {{>FirstName}} {{>MiddleName}}</td>
+		        <td><a href="/Customer/ShowCustomer/{{>CustomerId}}" id="showCustomer" class="btn btn-primary btn-xs">Перейти</a></td>
+            </tr>
+        {{/for}} 
+</script>
+
+<script>
+    function findCustomerByContractNumber(contractNumber) {
+        var url = "/Customer/GetCustomerByContractNumber";
+        $.getJSON(url, { contractNumber: contractNumber }, function (data) {
+
+            $("#customer").html(
+                $("#customersTemplate").render(data)
+            );
+        });
+    }
+
+    function findCustomerByLastName(lastName) {
+        var url = "/Customer/GetCustomersByLastName";
+        $.getJSON(url, { lastName: lastName }, function (data) {
+
+            $("#customer").html(
+                $("#customersTemplate").render(data)
+            );
+        });
+    }
+
+    $(document).ready(function () {
+
+        $("#showResultSearch").hide();
+        $("#searchByLastName").hide();
+
+        $("#findCustomerSelect").change(function() {
+            var currentSearchType = $("#findCustomerSelect").val();
+            if (currentSearchType == "contractNumber") {
+                
+                $("#searchByLastNameInput").val("");
+                $("#searchByLastName").hide();
+                $("#searchByContractNumber").show();
+                $("#showResultSearch").hide();
+                
+            } else if (currentSearchType == "lastName") {
+
+                $("#searchByContractNumberInput").val("");
+                $("#searchByContractNumber").hide();
+                $("#searchByLastName").show();
+                $("#showResultSearch").hide();
+                
+            }
+            
+        });
+
+        $(function() {
+            $("#searchByContractNumberButton").click(function() {
+                var contractNumber = $("#searchByContractNumberInput").val();
+                findCustomerByContractNumber(contractNumber);
+                $("#showResultSearch").show();
+            });
+        });
+        
+        $(function () {
+            $("#searchByLastNameButton").click(function () {
+                var lastName = $("#searchByLastNameInput").val();
+                findCustomerByLastName(lastName);
+                $("#showResultSearch").show();
+            });
+        });
+
+        
+    });
+</script>
+

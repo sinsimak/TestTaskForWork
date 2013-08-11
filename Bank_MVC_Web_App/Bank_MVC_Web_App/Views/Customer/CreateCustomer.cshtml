@@ -1,0 +1,64 @@
+﻿@model Bank_MVC_Web_App.Models.Dto.NewCustomerDto
+@{
+    ViewBag.Title = "Новый Клиент";
+}
+
+<h3>Новый клиент:</h3>
+@using ( Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Фамилия:</p>                   
+        </div> 
+        <div class="col-lg-8">
+            @Html.EditorFor(model => model.LastName)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Имя:</p>
+        </div>
+        <div class="col-lg-8">
+            @Html.EditorFor(model => model.FirstName)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Отчество:</p>
+        </div>
+        <div class="col-lg-8">
+            @Html.EditorFor(model => model.MiddleName)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Номер договора:</p>
+        </div>
+        <div class="col-lg-8">
+            @Html.EditorFor(model => model.ContractNumber)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Номер счёта:</p>
+        </div>
+        <div class="col-lg-8">
+            @Html.EditorFor(model => model.AccountNumber)
+        </div>
+    </div>
+    
+   <button class="btn btn-primary btn-xs" type="submit">Добавить</button>  
+}
+
+<script>
+    $(document).ready(function() {
+        $("#ContractNumber").attr("readonly", "readonly");
+    });
+</script>
+
+
+
